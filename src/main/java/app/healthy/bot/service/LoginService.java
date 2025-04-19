@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class AuthService {
+public class LoginService {
 
     @Autowired
     private UserRepository userRepository;
@@ -19,8 +19,11 @@ public class AuthService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public boolean login(String email, String rawPassword) {
+    public Optional<User> login(String email, String rawPassword) {
         Optional<User> userOpt = userRepository.findByEmail(email);
-        return userOpt.isPresent() && passwordEncoder.matches(rawPassword, userOpt.get().getPassword());
+        if (userOpt.isPresent() && passwordEncoder.matches(rawPassword, userOpt.get().getPassword())) {
+            return userOpt;
+        }
+        return Optional.empty();
     }
 }
