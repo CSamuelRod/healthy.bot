@@ -13,8 +13,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Desactiva CSRF
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/api/register", "/api/auth/**").permitAll()  // Rutas públicas
-                        .anyRequest().authenticated()  // Requiere autenticación para otras rutas
+                        .anyRequest().permitAll()  // Rutas públicas todas
                 );
 
 
