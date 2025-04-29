@@ -1,6 +1,7 @@
 package app.healthy.bot.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,14 +24,16 @@ public class Habit {
 
     private String description;
 
-    @OneToMany(mappedBy = "habit", cascade = CascadeType.ALL)
-    private List<Goal> goals;
-
+    @OneToOne(mappedBy = "habit", cascade = CascadeType.ALL)
+    private Goal goal;
     private Boolean isCustom = false;
 
+
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
+
 
 
     public Long getHabitId() {
@@ -57,12 +60,12 @@ public class Habit {
         this.description = description;
     }
 
-    public List<Goal> getGoals() {
-        return goals;
+    public Goal getGoal() {
+        return goal;
     }
 
-    public void setGoals(List<Goal> goals) {
-        this.goals = goals;
+    public void setGoal(Goal goal) {
+        this.goal = goal;
     }
 
     public Boolean getCustom() {

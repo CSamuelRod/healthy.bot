@@ -27,6 +27,10 @@ public class User {
     private String password;
     private LocalDate registrationDate;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Habit> habits;
+
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Goal> goals;
 
@@ -76,6 +80,14 @@ public class User {
 
     public void setRegistrationDate(LocalDate registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public List<Habit> getHabits() {
+        return habits;
+    }
+
+    public void setHabits(List<Habit> habits) {
+        this.habits = habits;
     }
 
     public List<Goal> getGoals() {
