@@ -18,15 +18,10 @@ import java.time.LocalDate;
 public class GoalDto {
 
     private Long user_id;
-
     private Long habit_id;
-
     private String objective;
-
     private Frecuency frequency;
-
     private LocalDate startDate;
-
     private LocalDate endDate;
 
     public Long getUser_id() {
