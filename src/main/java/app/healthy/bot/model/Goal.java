@@ -2,6 +2,9 @@ package app.healthy.bot.model;
 
 
 import app.healthy.bot.enums.Frecuency;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,10 +24,12 @@ public class Goal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long goal_Id;
 
+    @JsonManagedReference("goal-user")
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @JsonBackReference
     @OneToOne
     @JoinColumn(name = "habit_id", unique = true) // ⚡ Muy importante: unique=true
     private Habit habit;
@@ -38,6 +43,7 @@ public class Goal {
 
     private LocalDate endDate;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL)
     private List<Progress> progresses;
 

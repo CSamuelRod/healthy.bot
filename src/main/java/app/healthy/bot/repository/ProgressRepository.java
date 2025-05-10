@@ -7,6 +7,4 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ProgressRepository extends JpaRepository<Progress, Long> {
-
-
 }

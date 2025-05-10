@@ -1,7 +1,9 @@
 package app.healthy.bot.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +25,7 @@ public class Habit {
     private String name;
 
     private String description;
-
+    @JsonBackReference
     @OneToOne(mappedBy = "habit", cascade = CascadeType.ALL)
     private Goal goal;
     private Boolean isCustom = false;
@@ -31,7 +33,7 @@ public class Habit {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
+    @JsonManagedReference("goal-user")
     private User user;
 
 

@@ -1,6 +1,7 @@
 package app.healthy.bot.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,11 +27,11 @@ public class User {
     private String email;
     private String password;
     private LocalDate registrationDate;
-
+    @JsonBackReference("habit-user")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Habit> habits;
 
-
+    @JsonBackReference("goal-user")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Goal> goals;
 

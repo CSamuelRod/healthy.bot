@@ -10,10 +10,19 @@ public class HabitDto {
     private String name;
     private String description;
     private Boolean isCustom;
+    private Long goalId;
     private Long userId;
 
     public Long getHabitId() {
         return habitId;
+    }
+
+    public Long getGoalId() {
+        return goalId;
+    }
+
+    public void setGoalId(Long goalId) {
+        this.goalId = goalId;
     }
 
     public void setHabitId(Long habitId) {

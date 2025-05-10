@@ -2,7 +2,7 @@ package app.healthy.bot.dto;
 
 import java.time.LocalDate;
 
-public class ProgressDto {   private Long progressId;
+public class ProgressDto {
     private Long goalId;
     private LocalDate date;
     private Boolean completed;
@@ -12,20 +12,11 @@ public class ProgressDto {   private Long progressId;
     public ProgressDto() {
     }
 
-    public ProgressDto(Long progressId, Long goalId, LocalDate date, Boolean completed, String notes) {
-        this.progressId = progressId;
+    public ProgressDto(Long goalId, LocalDate date, Boolean completed, String notes) {
         this.goalId = goalId;
         this.date = date;
         this.completed = completed;
         this.notes = notes;
-    }
-
-    public Long getProgressId() {
-        return progressId;
-    }
-
-    public void setProgressId(Long progressId) {
-        this.progressId = progressId;
     }
 
     public Long getGoalId() {

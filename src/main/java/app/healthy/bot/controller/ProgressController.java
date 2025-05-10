@@ -1,6 +1,9 @@
 package app.healthy.bot.controller;
 
+import app.healthy.bot.dto.HabitDto;
+import app.healthy.bot.dto.ProgressDto;
 import app.healthy.bot.model.Progress;
+import app.healthy.bot.service.GoalService;
 import app.healthy.bot.service.ProgressService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,15 +16,19 @@ import java.util.List;
 public class ProgressController {
 
     private final ProgressService progressService;
-
-    public ProgressController(ProgressService progressService) {
+    private final GoalService  goalService;
+    public ProgressController(ProgressService progressService, GoalService goalService) {
         this.progressService = progressService;
+        this.goalService = goalService;
+    }
+    @PostMapping
+    public ResponseEntity<ProgressDto> saveProgress(@RequestBody ProgressDto progressDto) {
+        ProgressDto createdProgress = progressService.save(progressDto);
+        return ResponseEntity.ok(createdProgress);
     }
 
-    @PostMapping
-    public ResponseEntity<Progress> saveProgress(@RequestBody Progress progress) {
-        return ResponseEntity.ok(progressService.save(progress));
-    }
+
+
 /*
     @GetMapping("/{id}")
     public ResponseEntity<Progress> getProgress(@PathVariable Long id) {

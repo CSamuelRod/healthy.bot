@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface GoalRepository extends JpaRepository<Goal,Long> {
 
-    Optional<Goal> findByHabit(Habit habit);
+    Optional<Goal> findByHabit(Habit habit); // mejor usar Optional
+
 }

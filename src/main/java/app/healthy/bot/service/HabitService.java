@@ -52,6 +52,7 @@ public class HabitService {
                     dto.setHabitId(habit.getHabitId());
                     dto.setName(habit.getName());
                     dto.setDescription(habit.getDescription());
+                    dto.setGoalId(habit.getGoal().getGoal_Id());
                     dto.setUserId(user.getUserId()); // Ya lo tienes
                     return dto;
                 })

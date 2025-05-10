@@ -11,6 +11,8 @@ import app.healthy.bot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class GoalService {
 
@@ -24,6 +26,7 @@ public class GoalService {
         this.habitRepository = habitRepository;
         this.userRepository = userRepository;
     }
+
 
     // Crear Goal
     public GoalDto createGoal(GoalDto dto) {
@@ -56,6 +59,18 @@ public class GoalService {
         return dto;
     }
 
+    public Long getGoalIdByHabitId(Long habitId) {
+        Habit habit = habitRepository.findById(habitId)
+                .orElseThrow(() -> new RuntimeException("Hábito no encontrado"));
+
+        Goal goal = goalRepository.findByHabit(habit)
+                .orElseThrow(() -> new RuntimeException("Goal no encontrado para el hábito"));
+
+        return goal.getGoal_Id();
+    }
+
+
+
     // Obtener Goal por HabitId
     public GoalDto getGoalByHabitId(Long habitId) {
         Habit habit = habitRepository.findById(habitId)
@@ -66,11 +81,15 @@ public class GoalService {
                 .orElseThrow(() -> new RuntimeException("Goal no encontrado para el hábito"));
 
         // Crear y llenar el DTO con los detalles del Goal
-        GoalDto dto = new GoalDto();
-        dto.setObjective(goal.getObjective());
-        dto.setFrequency(goal.getFrequency()); // Directamente el Enum
-        dto.setStartDate(goal.getStartDate());
-        dto.setEndDate(goal.getEndDate());
+        GoalDto dto = new GoalDto(
+                goal.getGoal_Id(),                       // 👈 aquí está el ID real
+                goal.getUser().getUserId(),
+                goal.getHabit().getHabitId(),
+                goal.getObjective(),
+                goal.getFrequency(),
+                goal.getStartDate(),
+                goal.getEndDate()
+        );
 
         return dto;
     }
