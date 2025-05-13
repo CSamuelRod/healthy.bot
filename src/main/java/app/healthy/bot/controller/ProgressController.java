@@ -17,6 +17,7 @@ public class ProgressController {
 
     private final ProgressService progressService;
     private final GoalService  goalService;
+
     public ProgressController(ProgressService progressService, GoalService goalService) {
         this.progressService = progressService;
         this.goalService = goalService;
@@ -29,34 +30,16 @@ public class ProgressController {
 
 
 
-/*
-    @GetMapping("/{id}")
-    public ResponseEntity<Progress> getProgress(@PathVariable Long id) {
-        return progressService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/goal/{goalId}")
-    public ResponseEntity<List<Progress>> getByGoal(@PathVariable Long goalId) {
-        return ResponseEntity.ok(progressService.findByGoalId(goalId));
-    }
-
-    @GetMapping("/habit/{habitId}")
-    public ResponseEntity<List<Progress>> getByHabit(@PathVariable Long habitId) {
-        return ResponseEntity.ok(progressService.findByHabitId(habitId));
-    }
-
-    @GetMapping("/habit/{habitId}/date/{date}")
-    public ResponseEntity<List<Progress>> getByHabitAndDate(@PathVariable Long habitId, @PathVariable String date) {
-        return ResponseEntity.ok(progressService.findByHabitIdAndDate(habitId, LocalDate.parse(date)));
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         progressService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-*/
+    @GetMapping("/habit/{id}")
+    public ResponseEntity<List<ProgressDto>> getProgressListByHabitId(@PathVariable Long id) {
+        return progressService.getProgressListByHabitId(id);
+    }
+
+
 }
