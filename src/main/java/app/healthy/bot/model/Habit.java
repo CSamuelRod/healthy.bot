@@ -26,7 +26,7 @@ public class Habit {
 
     private String description;
     @JsonBackReference
-    @OneToOne(mappedBy = "habit", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "habit", cascade = CascadeType.REMOVE)
     private Goal goal;
     private Boolean isCustom = false;
 
@@ -35,8 +35,6 @@ public class Habit {
     @JoinColumn(name = "user_id")
     @JsonManagedReference("goal-user")
     private User user;
-
-
 
     public Long getHabitId() {
         return habitId;

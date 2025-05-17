@@ -2,6 +2,7 @@ package app.healthy.bot.controller;
 
 import app.healthy.bot.dto.HabitDto;
 import app.healthy.bot.dto.ProgressDto;
+import app.healthy.bot.dto.ProgressPercentageDto;
 import app.healthy.bot.model.Progress;
 import app.healthy.bot.service.GoalService;
 import app.healthy.bot.service.ProgressService;
@@ -36,10 +37,9 @@ public class ProgressController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/habit/{id}")
-    public ResponseEntity<List<ProgressDto>> getProgressListByHabitId(@PathVariable Long id) {
-        return progressService.getProgressListByHabitId(id);
+    @GetMapping("/habit/{userId}/progress-percentage")
+    public ResponseEntity<List<ProgressPercentageDto>> getProgressPercentageByUserId(@PathVariable Long userId) {
+        return progressService.getMonthlyProgressByUser(userId);
     }
-
 
 }

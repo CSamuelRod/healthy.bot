@@ -3,7 +3,6 @@ package app.healthy.bot.model;
 
 import app.healthy.bot.enums.Frecuency;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -44,7 +43,7 @@ public class Goal {
     private LocalDate endDate;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "goal", cascade = CascadeType.REMOVE)
     private List<Progress> progresses;
 
     public Long getGoal_Id() {

@@ -17,8 +17,6 @@ public class Progress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long progressId;
 
-
-
     @ManyToOne
     @JoinColumn(name = "goal_id")
     private Goal goal;

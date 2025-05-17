@@ -35,4 +35,11 @@ public class HabitController {
         List<HabitDto> habits = habitService.getHabitsByUserId(userId);
         return ResponseEntity.ok(habits);
     }
+
+    @DeleteMapping("/{habitId}")
+    public ResponseEntity<Void> delete(@PathVariable Long habitId) {
+        habitService.deleteHabit(habitId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

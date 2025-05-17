@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service // Importante para que Spring lo detecte
@@ -59,4 +60,12 @@ public class HabitService {
                 .collect(Collectors.toList());
     }
 
+
+    public void deleteHabit(Long habitId){
+        Optional<Habit> habit = habitRepository.findById(habitId);
+
+        if (habit.isPresent()){
+            habitRepository.deleteById(habitId);
+        }
+    }
 }
