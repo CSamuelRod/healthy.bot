@@ -3,20 +3,26 @@ package app.healthy.bot.dto;
 import java.time.LocalDate;
 
 public class ProgressDto {
+    private Long progressId;  // Nuevo campo para identificar el progreso
     private Long goalId;
     private LocalDate date;
     private Boolean completed;
     private String notes;
 
-
-    public ProgressDto() {
-    }
-
-    public ProgressDto(Long goalId, LocalDate date, Boolean completed, String notes) {
+    public ProgressDto(Long progressId, Long goalId, LocalDate date, Boolean completed, String notes) {
+        this.progressId = progressId;
         this.goalId = goalId;
         this.date = date;
         this.completed = completed;
         this.notes = notes;
+    }
+
+    public Long getProgressId() {
+        return progressId;
+    }
+
+    public void setProgressId(Long progressId) {
+        this.progressId = progressId;
     }
 
     public Long getGoalId() {
