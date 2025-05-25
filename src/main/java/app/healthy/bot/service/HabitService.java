@@ -8,6 +8,7 @@ import app.healthy.bot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +43,33 @@ public class HabitService {
         Habit saved = habitRepository.save(habit);
 
         return HabitDto.fromEntity(saved);
+    }
+
+    /**
+     * Actualiza un hábito existente.
+     *
+     * @param habitId ID del hábito a actualizar
+     * @param dto     DTO con los nuevos datos del hábito
+     * @return DTO actualizado
+     */
+    public HabitDto updateHabit(Long habitId, HabitDto dto) {
+        Habit existingHabit = habitRepository.findById(habitId)
+                .orElseThrow(() -> new RuntimeException("Hábito no encontrado"));
+
+        existingHabit.setName(dto.getName());
+        existingHabit.setDescription(dto.getDescription());
+
+        Habit updated = habitRepository.save(existingHabit);
+        return HabitDto.fromEntity(updated);
+    }
+
+
+    public HabitDto getHabitById(Long habitId){
+        Habit habit = habitRepository.findById(habitId)
+                .orElseThrow(() -> new RuntimeException("Hábito no encontrado"));
+
+        return HabitDto.fromEntity(habit);
+
     }
 
     /**

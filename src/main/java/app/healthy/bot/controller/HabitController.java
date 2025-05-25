@@ -44,17 +44,46 @@ public class HabitController {
         return ResponseEntity.ok(createdHabit);
     }
 
+
+    /**
+     * Actualiza un hábito existente.
+     *
+     * @param habitId  ID del hábito
+     * @param habitDto Datos nuevos del hábito
+     * @return ResponseEntity con el hábito actualizado y código HTTP 200
+     */
+    @PutMapping("/{habitId}")
+    public ResponseEntity<HabitDto> updateHabit(
+            @PathVariable Long habitId,
+            @RequestBody HabitDto habitDto
+    ) {
+        HabitDto updatedHabit = habitService.updateHabit(habitId, habitDto);
+        return ResponseEntity.ok(updatedHabit);
+    }
+
+    @GetMapping("{habitId}")
+    public ResponseEntity<HabitDto> getHabitById(@PathVariable Long habitId) {
+        HabitDto habitDto = habitService.getHabitById(habitId);
+        if (habitDto != null) {
+            return ResponseEntity.ok(habitDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     /**
      * Obtiene todos los hábitos asociados a un usuario específico.
      *
      * @param userId ID del usuario
      * @return ResponseEntity con la lista de hábitos y código HTTP 200
      */
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<HabitDto>> getHabitsByUserId(@PathVariable Long userId) {
         List<HabitDto> habits = habitService.getHabitsByUserId(userId);
         return ResponseEntity.ok(habits);
     }
+
+
 
     /**
      * Elimina un hábito dado su ID.
