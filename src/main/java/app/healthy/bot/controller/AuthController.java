@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+/**
+ * Controlador REST para operaciones de autenticación y registro.
+ */
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin
@@ -25,6 +28,12 @@ public class AuthController {
     @Autowired
     private RegisterService registerService;
 
+    /**
+     * Endpoint para autenticación de usuarios.
+     *
+     * @param request Datos de login (email y contraseña)
+     * @return Respuesta con mensaje y ID de usuario si es exitoso, o error 401 si no
+     */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         Optional<User> userOpt = loginService.login(request.getEmail(), request.getPassword());
@@ -34,10 +43,16 @@ public class AuthController {
             return ResponseEntity.ok(new LoginResponse("Exitoso", user.getUserId()));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new LoginResponse("Credenciales inválidas", (long) -1));
+                    .body(new LoginResponse("Credenciales inválidas", -1L));
         }
     }
 
+    /**
+     * Endpoint para registro de nuevos usuarios.
+     *
+     * @param request Datos para registro (nombre, apellido, email, contraseña)
+     * @return Respuesta con mensaje del resultado del registro
+     */
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
         String resultado = registerService.register(

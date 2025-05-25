@@ -1,15 +1,11 @@
 package app.healthy.bot.model;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Table(name = "habits")
@@ -25,10 +21,10 @@ public class Habit {
     private String name;
 
     private String description;
+
     @JsonBackReference
     @OneToOne(mappedBy = "habit", cascade = CascadeType.REMOVE)
     private Goal goal;
-    private Boolean isCustom = false;
 
 
     @ManyToOne
@@ -36,51 +32,4 @@ public class Habit {
     @JsonManagedReference("goal-user")
     private User user;
 
-    public Long getHabitId() {
-        return habitId;
-    }
-
-    public void setHabitId(Long habitId) {
-        this.habitId = habitId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Goal getGoal() {
-        return goal;
-    }
-
-    public void setGoal(Goal goal) {
-        this.goal = goal;
-    }
-
-    public Boolean getCustom() {
-        return isCustom;
-    }
-
-    public void setCustom(Boolean custom) {
-        isCustom = custom;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

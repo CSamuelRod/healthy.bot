@@ -1,11 +1,15 @@
 package app.healthy.bot.dto;
 
 import app.healthy.bot.model.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
     private Long id;
     private String name;
@@ -13,6 +17,7 @@ public class UserDto {
     private String email;
     private LocalDate registrationDate;
 
+    // De entidad a DTO
     public static UserDto fromEntity(User user) {
         UserDto dto = new UserDto();
         dto.setId(user.getUserId());
@@ -23,44 +28,27 @@ public class UserDto {
         return dto;
     }
 
-
-    public Long getId() {
-        return id;
+    // De DTO a entidad (sin password)
+    public User toEntity(String encodedPassword) {
+        User user = new User();
+        user.setUserId(this.id);
+        user.setName(this.name);
+        user.setLastName(this.lastName);
+        user.setEmail(this.email);
+        user.setPassword(encodedPassword); // necesario pasarla como argumento
+        user.setRegistrationDate(this.registrationDate != null ? this.registrationDate : LocalDate.now());
+        return user;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    // Alternativa directa para usar sin DTO explícito
+    public static User fromRaw(String name, String lastName, String email, String encodedPassword) {
+        User user = new User();
+        user.setName(name);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPassword(encodedPassword);
+        user.setRegistrationDate(LocalDate.now());
+        return user;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
-    }
 }

@@ -1,6 +1,5 @@
 package app.healthy.bot.repository;
 
-
 import app.healthy.bot.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

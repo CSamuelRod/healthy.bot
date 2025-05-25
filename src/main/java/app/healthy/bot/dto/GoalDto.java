@@ -1,86 +1,54 @@
 package app.healthy.bot.dto;
 
 import app.healthy.bot.enums.Frecuency;
-
+import app.healthy.bot.model.Goal;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class GoalDto {
-    private Long goalId; // 👈 NUEVO: ID del Goal
-    private Long user_id;
+    private Long goalId;
     private Long habit_id;
     private String objective;
     private Frecuency frequency;
     private LocalDate startDate;
     private LocalDate endDate;
 
-    public GoalDto(Long goalId, Long user_id, Long habit_id, String objective, Frecuency frequency, LocalDate startDate, LocalDate endDate) {
-        this.goalId = goalId;
-        this.user_id = user_id;
-        this.habit_id = habit_id;
-        this.objective = objective;
-        this.frequency = frequency;
-        this.startDate = startDate;
-        this.endDate = endDate;
+    /**
+     * Convierte una entidad Goal a GoalDto.
+     *
+     * @param goal Entidad Goal
+     * @return DTO correspondiente
+     */
+    public static GoalDto fromEntity(Goal goal) {
+        GoalDto dto = new GoalDto();
+        dto.setGoalId(goal.getGoal_Id());
+        if (goal.getHabit() != null) {
+            dto.setHabit_id(goal.getHabit().getHabitId());
+        }
+        dto.setObjective(goal.getObjective());
+        dto.setFrequency(goal.getFrequency());
+        dto.setStartDate(goal.getStartDate());
+        dto.setEndDate(goal.getEndDate());
+        return dto;
     }
 
-    public GoalDto() {
-    }
-
-    public Long getGoalId() {
-        return goalId;
-    }
-
-    public void setGoalId(Long goalId) {
-        this.goalId = goalId;
-    }
-
-    public Long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
-    }
-
-    public Long getHabit_id() {
-        return habit_id;
-    }
-
-    public void setHabit_id(Long habit_id) {
-        this.habit_id = habit_id;
-    }
-
-    public String getObjective() {
-        return objective;
-    }
-
-    public void setObjective(String objective) {
-        this.objective = objective;
-    }
-
-    public Frecuency getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(Frecuency frequency) {
-        this.frequency = frequency;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    /**
+     * Convierte este DTO en una entidad Goal (sin hábito).
+     *
+     * @return Entidad Goal correspondiente
+     */
+    public Goal toEntity() {
+        Goal goal = new Goal();
+        goal.setObjective(this.objective);
+        goal.setFrequency(this.frequency);
+        goal.setStartDate(this.startDate);
+        goal.setEndDate(this.endDate);
+        return goal;
     }
 }

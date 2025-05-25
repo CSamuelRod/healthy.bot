@@ -1,26 +1,15 @@
 package app.healthy.bot.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProgressPercentageDto {
     private Long habitId;
     private String habitName;
     private double progressPercentage;
 
-    public ProgressPercentageDto(Long habitId, String habitName, double progressPercentage) {
-        this.habitId = habitId;
-        this.habitName = habitName;
-        this.progressPercentage = progressPercentage;
-
-    }
-
-    public Long getHabitId() {
-        return habitId;
-    }
-
-    public String getHabitName() {
-        return habitName;
-    }
-
-    public double getProgressPercentage() {
-        return progressPercentage;
-    }
 }
