@@ -1,9 +1,14 @@
 package app.healthy.bot.service;
 
+import app.healthy.bot.dto.LoginRequest;
 import app.healthy.bot.dto.UserDto;
 import app.healthy.bot.model.User;
 import app.healthy.bot.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * Servicio para operaciones relacionadas con usuarios.
@@ -12,6 +17,9 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -62,4 +70,21 @@ public class UserService {
         }
         userRepository.deleteById(id);
     }
+
+    public LoginRequest resetPassword(LoginRequest request) {
+        Optional<User> user = userRepository.findByEmail(request.getEmail());
+        if (user.isEmpty()) {
+            // Usuario no encontrado, devolvemos DTO con mensaje de error en email
+            return new LoginRequest("email no encontrado", null);
+        }
+        // Actualizamos la contraseña
+        User userFinal = user.get();
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        userFinal.setPassword(encodedPassword);
+        userRepository.save(userFinal);
+        // Devolvemos DTO con email original y password null para indicar éxito
+        return new LoginRequest(userFinal.getEmail(), null);
+    }
+
+
 }

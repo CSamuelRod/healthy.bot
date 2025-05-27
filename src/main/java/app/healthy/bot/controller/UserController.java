@@ -1,5 +1,6 @@
 package app.healthy.bot.controller;
 
+import app.healthy.bot.dto.LoginRequest;
 import app.healthy.bot.dto.UserDto;
 import app.healthy.bot.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -53,4 +54,11 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<LoginRequest> resetPassword(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(userService.resetPassword(request));
+    }
+
 }
