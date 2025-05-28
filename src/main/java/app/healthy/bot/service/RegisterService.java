@@ -34,19 +34,35 @@ public class RegisterService {
                            String apellido,
                            String email,
                            String rawPassword) {
+
+        // Validaciones básicas del lado del backend
+
+        if (nombre == null || nombre.trim().isEmpty() ||
+                apellido == null || apellido.trim().isEmpty() ||
+                email == null || email.trim().isEmpty() ||
+                rawPassword == null || rawPassword.trim().isEmpty()) {
+            return "Todos los campos son obligatorios";
+        }
+
+        if (!email.matches("^[A-Za-z0-9._%+-]+@(gmail\\.com|hotmail\\.com)$")) {
+            return "El correo debe ser válido y terminar en @gmail.com o @hotmail.com";
+        }
+
+        if (rawPassword.length() < 6 ||
+                !rawPassword.matches(".*[A-Za-z].*") || // debe contener letras
+                !rawPassword.matches(".*[0-9].*")) {    // debe contener números
+            return "La contraseña debe tener al menos 6 caracteres, incluir letras y números";
+        }
+
         if (userRepository.findByEmail(email).isPresent()) {
             return "El correo ya está registrado";
         }
 
-        // Codificar la contraseña
         String encodedPassword = passwordEncoder.encode(rawPassword);
-
-        // Usar método auxiliar desde el DTO
         User user = fromRaw(nombre, apellido, email, encodedPassword);
-
-        // Guardar en la base de datos
         userRepository.save(user);
 
         return "Usuario registrado con éxito";
     }
+
 }
