@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * Servicio para la autenticación de usuarios.
+ * Servicio encargado de manejar la autenticación de usuarios mediante validación de credenciales.
  */
 @Service
 public class LoginService {
@@ -21,11 +21,15 @@ public class LoginService {
     private BCryptPasswordEncoder passwordEncoder;
 
     /**
-     * Valida las credenciales del usuario.
+     * Valida las credenciales de un usuario.
+     * <p>
+     * Compara el correo electrónico y la contraseña proporcionada (en texto plano)
+     * con las credenciales almacenadas en la base de datos. Si coinciden, retorna el usuario.
      *
-     * @param email       Correo electrónico
+     * @param email       Correo electrónico del usuario
      * @param rawPassword Contraseña en texto plano
-     * @return Usuario autenticado envuelto en Optional, vacío si credenciales inválidas
+     * @return Optional con el usuario autenticado si las credenciales son válidas,
+     *         o vacío si son incorrectas
      */
     public Optional<User> login(String email, String rawPassword) {
         Optional<User> userOpt = userRepository.findByEmail(email);

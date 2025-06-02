@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 /**
- * Controlador REST para operaciones de autenticación y registro.
+ * Controlador REST para gestionar las operaciones de autenticación y registro de usuarios.
+ * <p>
+ * Provee endpoints para login y registro, comunicándose con los servicios correspondientes.
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -29,10 +31,15 @@ public class AuthController {
     private RegisterService registerService;
 
     /**
-     * Endpoint para autenticación de usuarios.
+     * Maneja la petición de login de usuarios.
+     * <p>
+     * Recibe un objeto {@link LoginRequest} con email y contraseña,
+     * valida las credenciales usando {@link LoginService} y responde con un {@link LoginResponse}
+     * que incluye mensaje y ID de usuario si la autenticación es exitosa.
+     * En caso de credenciales inválidas, devuelve código 401 con mensaje correspondiente.
      *
-     * @param request Datos de login (email y contraseña)
-     * @return Respuesta con mensaje y ID de usuario si es exitoso, o error 401 si no
+     * @param request Objeto con email y contraseña para autenticación
+     * @return Respuesta HTTP con mensaje y usuario autenticado o error 401
      */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
@@ -48,10 +55,14 @@ public class AuthController {
     }
 
     /**
-     * Endpoint para registro de nuevos usuarios.
+     * Maneja la petición de registro de nuevos usuarios.
+     * <p>
+     * Recibe un objeto {@link RegisterRequest} con los datos necesarios,
+     * llama a {@link RegisterService#register} para registrar al usuario y
+     * devuelve un {@link RegisterResponse} con el mensaje de resultado.
      *
-     * @param request Datos para registro (nombre, apellido, email, contraseña)
-     * @return Respuesta con mensaje del resultado del registro
+     * @param request Objeto con datos para registrar un usuario
+     * @return Respuesta HTTP con mensaje indicando éxito o motivo de fallo
      */
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {

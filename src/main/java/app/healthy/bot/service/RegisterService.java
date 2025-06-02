@@ -10,7 +10,11 @@ import org.springframework.stereotype.Service;
 import static app.healthy.bot.dto.UserDto.fromRaw;
 
 /**
- * Servicio para el registro de nuevos usuarios.
+ * Servicio encargado del registro de nuevos usuarios.
+ * <p>
+ * Valida los datos ingresados (nombre, apellido, correo y contraseña),
+ * verifica que el correo no esté registrado previamente y guarda el nuevo usuario
+ * con la contraseña cifrada.
  */
 @Service
 public class RegisterService {
@@ -22,13 +26,18 @@ public class RegisterService {
     private BCryptPasswordEncoder passwordEncoder;
 
     /**
-     * Registra un nuevo usuario si el correo no está ya registrado.
+     * Registra un nuevo usuario en el sistema.
+     * <p>
+     * Realiza validaciones básicas sobre los datos de entrada,
+     * incluyendo formato de correo, fuerza de contraseña y unicidad del correo.
      *
      * @param nombre      Nombre del usuario
      * @param apellido    Apellido del usuario
      * @param email       Correo electrónico del usuario
      * @param rawPassword Contraseña en texto plano
-     * @return Mensaje indicando éxito o error
+     * @return Cadena con mensaje indicando el resultado del registro:
+     *         - Éxito si el usuario fue registrado
+     *         - Descripción del error si alguna validación falla
      */
     public String register(String nombre,
                            String apellido,
@@ -49,8 +58,8 @@ public class RegisterService {
         }
 
         if (rawPassword.length() < 6 ||
-                !rawPassword.matches(".*[A-Za-z].*") || // debe contener letras
-                !rawPassword.matches(".*[0-9].*")) {    // debe contener números
+                !rawPassword.matches(".*[A-Za-z].*") ||  // debe contener letras
+                !rawPassword.matches(".*[0-9].*")) {     // debe contener números
             return "La contraseña debe tener al menos 6 caracteres, incluir letras y números";
         }
 
@@ -58,6 +67,7 @@ public class RegisterService {
             return "El correo ya está registrado";
         }
 
+        // Registro del usuario
         String encodedPassword = passwordEncoder.encode(rawPassword);
         User user = fromRaw(nombre, apellido, email, encodedPassword);
         userRepository.save(user);

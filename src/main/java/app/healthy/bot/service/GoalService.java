@@ -25,16 +25,16 @@ public class GoalService {
     }
 
     /**
-     * Crea una nueva meta (goal) asociada a un hábito.
+     * Crea una nueva meta asociada a un hábito.
      *
      * @param dto Datos de la meta a crear
      * @return DTO con los datos de la meta guardada
      */
     public GoalDto createGoal(GoalDto dto) {
-        Goal goal = dto.toEntity();
-
         Habit habit = habitRepository.findById(dto.getHabit_id())
                 .orElseThrow(() -> new RuntimeException("Hábito no encontrado"));
+
+        Goal goal = dto.toEntity();
         goal.setHabit(habit);
 
         Goal savedGoal = goalRepository.save(goal);
@@ -42,10 +42,10 @@ public class GoalService {
     }
 
     /**
-     * Obtiene la meta (goal) asociada a un hábito.
+     * Obtiene la meta asociada a un hábito específico.
      *
      * @param habitId ID del hábito
-     * @return DTO con los datos de la meta
+     * @return DTO con los datos de la meta encontrada
      */
     public GoalDto getGoalByHabitId(Long habitId) {
         Habit habit = habitRepository.findById(habitId)
@@ -60,9 +60,9 @@ public class GoalService {
     /**
      * Actualiza una meta existente.
      *
-     * @param goalId ID de la meta a actualizar
+     * @param goalId  ID de la meta a actualizar
      * @param goalDto DTO con los nuevos datos de la meta
-     * @return DTO actualizado
+     * @return DTO actualizado con los nuevos valores
      */
     public GoalDto updateGoal(Long goalId, GoalDto goalDto) {
         Goal goal = goalRepository.findById(goalId)

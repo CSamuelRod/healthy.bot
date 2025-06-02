@@ -18,8 +18,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+/**
+ * Servicio que gestiona el progreso de los hábitos asociados a metas de los usuarios.
+ * Proporciona funcionalidades para guardar registros de progreso, obtener progreso por fecha,
+ * calcular porcentajes de cumplimiento mensual, y eliminar registros.
+ */
 @Service
 public class ProgressService {
 
@@ -28,6 +32,14 @@ public class ProgressService {
     private final GoalRepository goalRepository;
     private final HabitRepository habitRepository;
 
+    /**
+     * Constructor con inyección de dependencias.
+     *
+     * @param userRepository     Repositorio de usuarios
+     * @param progressRepository Repositorio de progreso
+     * @param goalRepository     Repositorio de metas
+     * @param habitRepository    Repositorio de hábitos
+     */
     public ProgressService(UserRepository userRepository,
                            ProgressRepository progressRepository,
                            GoalRepository goalRepository,
@@ -38,6 +50,12 @@ public class ProgressService {
         this.habitRepository = habitRepository;
     }
 
+    /**
+     * Guarda un nuevo registro de progreso asociado a una meta.
+     *
+     * @param progressDto Datos del progreso a guardar
+     * @return DTO del progreso guardado
+     */
     public ProgressDto save(ProgressDto progressDto) {
         Goal goal = goalRepository.findById(progressDto.getGoalId())
                 .orElseThrow(() -> new RuntimeException("Goal no encontrado con ID: " + progressDto.getGoalId()));
@@ -50,24 +68,42 @@ public class ProgressService {
 
         Progress saved = progressRepository.save(progress);
 
-        return toDto(saved);
+        return ProgressDto.fromEntity(saved);
     }
 
+    /**
+     * Obtiene los registros de progreso únicos por usuario y fecha.
+     *
+     * @param userId ID del usuario
+     * @param date   Fecha del progreso
+     * @return Lista de DTOs de progreso encontrados
+     */
     public List<ProgressDto> getUniqueProgressByUserAndDate(Long userId, LocalDate date) {
         List<Progress> progresses = progressRepository.findUniqueProgress(userId, date);
-        return progresses.stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+        List<ProgressDto> dtoList = new ArrayList<>();
+        for (Progress progress : progresses) {
+            dtoList.add(ProgressDto.fromEntity(progress));
+        }
+        return dtoList;
     }
-
-
+    /**
+     * Elimina un registro de progreso por su ID.
+     *
+     * @param id ID del progreso
+     */
     public void delete(Long id) {
         progressRepository.deleteById(id);
     }
 
+    /**
+     * Calcula el porcentaje de cumplimiento mensual de cada hábito del usuario.
+     *
+     * @param userId ID del usuario
+     * @return Lista de porcentajes por hábito en el mes actual, o 404 si no hay datos
+     */
     public ResponseEntity<List<ProgressPercentageDto>> getMonthlyProgressByUser(Long userId) {
         Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) {
+        if (!userOpt.isPresent()) {
             return ResponseEntity.notFound().build();
         }
         User user = userOpt.get();
@@ -85,33 +121,49 @@ public class ProgressService {
 
         for (Habit habit : habits) {
             Optional<Goal> goalOpt = goalRepository.findByHabit(habit);
-            if (goalOpt.isEmpty()) continue;
+            if (!goalOpt.isPresent()) {
+                continue;
+            }
 
             Goal goal = goalOpt.get();
             Frecuency frequency = goal.getFrequency();
-            if (frequency == null) continue;
+            if (frequency == null) {
+                continue;
+            }
 
             List<Progress> progressList = progressRepository.findByGoalAndDateBetween(goal, start, end);
 
             int expectedCount = calculateExpectedCount(frequency, now, start);
-            long completedCount = progressList.stream()
-                    .filter(p -> Boolean.TRUE.equals(p.getCompleted()))
-                    .count();
+            int completedCount = 0;
+            for (Progress progress : progressList) {
+                if (Boolean.TRUE.equals(progress.getCompleted())) {
+                    completedCount++;
+                }
+            }
 
             double percentage = expectedCount > 0 ? (completedCount * 100.0) / expectedCount : 0.0;
 
-            progressPercentageList.add(new ProgressPercentageDto(habit.getHabitId(), habit.getName(), percentage));
+            ProgressPercentageDto dto = new ProgressPercentageDto(habit.getHabitId(), habit.getName(), percentage);
+            progressPercentageList.add(dto);
         }
 
         return ResponseEntity.ok(progressPercentageList);
     }
 
+    /**
+     * Calcula el número esperado de registros de progreso en el mes, basado en la frecuencia.
+     *
+     * @param frequency Frecuencia de la meta (diaria, semanal, mensual)
+     * @param now       Fecha actual
+     * @param start     Primer día del mes
+     * @return Número esperado de entradas de progreso
+     */
     private int calculateExpectedCount(Frecuency frequency, LocalDate now, LocalDate start) {
         switch (frequency) {
             case DAILY:
                 return now.lengthOfMonth();
             case WEEKLY:
-                int firstDay = start.getDayOfWeek().getValue(); // 1=Monday ... 7=Sunday
+                int firstDay = start.getDayOfWeek().getValue();
                 int totalDays = now.lengthOfMonth();
                 int remainingDays = totalDays - (8 - firstDay);
                 return 1 + (remainingDays / 7);
@@ -122,13 +174,4 @@ public class ProgressService {
         }
     }
 
-    private ProgressDto toDto(Progress progress) {
-        return new ProgressDto(
-                progress.getProgressId(),
-                progress.getGoal().getGoal_Id(),
-                progress.getDate(),
-                progress.getCompleted(),
-                progress.getNotes()
-        );
-    }
 }

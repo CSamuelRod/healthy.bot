@@ -8,14 +8,14 @@ import app.healthy.bot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
- * Servicio para gestionar hábitos de los usuarios.
+ * Servicio para gestionar los hábitos de los usuarios.
+ * <p>
+ * Incluye operaciones para crear, actualizar, consultar y eliminar hábitos.
  */
 @Service
 public class HabitService {
@@ -30,10 +30,11 @@ public class HabitService {
     }
 
     /**
-     * Crea un nuevo hábito asociado a un usuario.
+     * Crea un nuevo hábito asociado a un usuario existente.
      *
-     * @param dto DTO con los datos del hábito
-     * @return DTO con el hábito creado y su ID asignado
+     * @param dto Objeto DTO con los datos del hábito a crear
+     * @return Objeto DTO con el hábito creado, incluyendo su ID
+     * @throws RuntimeException si el usuario no existe
      */
     public HabitDto createHabit(HabitDto dto) {
         User user = userRepository.findById(dto.getUserId())
@@ -46,11 +47,12 @@ public class HabitService {
     }
 
     /**
-     * Actualiza un hábito existente.
+     * Actualiza un hábito ya existente.
      *
      * @param habitId ID del hábito a actualizar
      * @param dto     DTO con los nuevos datos del hábito
      * @return DTO actualizado
+     * @throws RuntimeException si el hábito no existe
      */
     public HabitDto updateHabit(Long habitId, HabitDto dto) {
         Habit existingHabit = habitRepository.findById(habitId)
@@ -63,20 +65,26 @@ public class HabitService {
         return HabitDto.fromEntity(updated);
     }
 
-
-    public HabitDto getHabitById(Long habitId){
+    /**
+     * Obtiene un hábito por su ID.
+     *
+     * @param habitId ID del hábito
+     * @return DTO del hábito encontrado
+     * @throws RuntimeException si el hábito no existe
+     */
+    public HabitDto getHabitById(Long habitId) {
         Habit habit = habitRepository.findById(habitId)
                 .orElseThrow(() -> new RuntimeException("Hábito no encontrado"));
 
         return HabitDto.fromEntity(habit);
-
     }
 
     /**
-     * Obtiene la lista de hábitos asociados a un usuario.
+     * Obtiene todos los hábitos de un usuario específico.
      *
      * @param userId ID del usuario
-     * @return Lista de DTOs con los hábitos del usuario
+     * @return Lista de DTOs representando los hábitos del usuario
+     * @throws RuntimeException si el usuario no existe
      */
     public List<HabitDto> getHabitsByUserId(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
@@ -97,7 +105,7 @@ public class HabitService {
     }
 
     /**
-     * Elimina un hábito dado su ID.
+     * Elimina un hábito si existe.
      *
      * @param habitId ID del hábito a eliminar
      */

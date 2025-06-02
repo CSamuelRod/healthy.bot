@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/goals")
+@CrossOrigin
 public class GoalController {
 
     private final GoalService goalService;
@@ -37,9 +38,9 @@ public class GoalController {
     public ResponseEntity<GoalDto> getGoalByHabitId(@PathVariable Long habitId) {
         try {
             GoalDto goalDto = goalService.getGoalByHabitId(habitId);
-            return new ResponseEntity<>(goalDto, HttpStatus.OK);
+            return ResponseEntity.ok(goalDto);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -54,9 +55,9 @@ public class GoalController {
     public ResponseEntity<GoalDto> createGoal(@RequestBody GoalDto goalDto) {
         try {
             GoalDto createdGoal = goalService.createGoal(goalDto);
-            return new ResponseEntity<>(createdGoal, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdGoal);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
@@ -72,9 +73,9 @@ public class GoalController {
     public ResponseEntity<GoalDto> updateGoal(@PathVariable Long goalId, @RequestBody GoalDto goalDto) {
         try {
             GoalDto updatedGoal = goalService.updateGoal(goalId, goalDto);
-            return new ResponseEntity<>(updatedGoal, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.ok(updatedGoal);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
@@ -89,9 +90,9 @@ public class GoalController {
     public ResponseEntity<Void> deleteGoal(@PathVariable Long goalId) {
         try {
             goalService.deleteGoal(goalId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }
