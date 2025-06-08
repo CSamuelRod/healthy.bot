@@ -25,7 +25,7 @@ src/
      │            └── service/           # Lógica de negocio
      └── resources/
           ├── application.properties    # Configuración de la aplicación
-          └── static/                   # Archivos estáticos (si los hay)
+          └── static/                  
 ⚙️ Configuración de la base de datos
 La conexión a la base de datos MySQL se configura en el archivo application.properties:
 
